@@ -1,0 +1,72 @@
+
+    (function() {
+      var baseURL = "https://cdn.shopify.com/shopifycloud/checkout-web/assets/";
+      var scripts = ["https://cdn.shopify.com/shopifycloud/checkout-web/assets/runtime.latest.es.3e354d04d54b50ab5ead.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/1726.latest.es.8591ef0b9f2ef81b64d9.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/6276.latest.es.a91148d59ab9163c723b.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/7623.latest.es.e3cc4c91fdda8c3c21b7.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/app.latest.es.a4f7e60e62571841c059.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/9033.latest.es.255b8a9d0304673e30f6.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/3502.latest.es.9ed854e0783852147f46.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/1519.latest.es.31d9fdc0eefc437489a1.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/4415.latest.es.667f9a6d6786046c7abd.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/4760.latest.es.94d8eb2d5d4b4fa4f960.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/737.latest.es.14791987e2936298e94b.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/4253.latest.es.bfae9fcee72e175a612a.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/3337.latest.es.c9c936137c69ff325e8e.js","https://cdn.shopify.com/shopifycloud/checkout-web/assets/OnePage.latest.es.fa06836fd913cf3becc7.js"];
+      var styles = ["https://cdn.shopify.com/shopifycloud/checkout-web/assets/1726.latest.es.8b1b6c7965b27c2dc057.css","https://cdn.shopify.com/shopifycloud/checkout-web/assets/app.latest.es.7030762cc777f3a6277f.css","https://cdn.shopify.com/shopifycloud/checkout-web/assets/6268.latest.es.1d7ba5c5498e967a4d84.css"];
+      var fontPreconnectUrls = [];
+      var fontPrefetchUrls = [];
+      var imgPrefetchUrls = ["https://cdn.shopify.com/s/files/1/0042/8851/2072/files/Todo_dental_logo_24800a6b-5dd0-4ac0-b1d1-571ad2b0b8a5_x320.png?v=1614291573","https://cdn.shopify.com/s/files/1/0042/8851/2072/files/gracias_2000x.png?v=1614291605"];
+
+      function preconnect(url, callback) {
+        var link = document.createElement('link');
+        link.rel = 'dns-prefetch preconnect';
+        link.href = url;
+        link.crossOrigin = '';
+        link.onload = link.onerror = callback;
+        document.head.appendChild(link);
+      }
+
+      function preconnectAssets() {
+        var resources = [baseURL].concat(fontPreconnectUrls);
+        var index = 0;
+        (function next() {
+          var res = resources[index++];
+          if (res) preconnect(res, next);
+        })();
+      }
+
+      function prefetch(url, as, callback) {
+        var link = document.createElement('link');
+        if (link.relList.supports('prefetch')) {
+          link.rel = 'prefetch';
+          link.fetchPriority = 'low';
+          link.as = as;
+          if (as === 'font') link.type = 'font/woff2';
+          link.href = url;
+          link.crossOrigin = '';
+          link.onload = link.onerror = callback;
+          document.head.appendChild(link);
+        } else {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.onloadend = callback;
+          xhr.send();
+        }
+      }
+
+      function prefetchAssets() {
+        var resources = [].concat(
+          scripts.map(function(url) { return [url, 'script']; }),
+          styles.map(function(url) { return [url, 'style']; }),
+          fontPrefetchUrls.map(function(url) { return [url, 'font']; }),
+          imgPrefetchUrls.map(function(url) { return [url, 'image']; })
+        );
+        var index = 0;
+        (function next() {
+          var res = resources[index++];
+          if (res) prefetch(res[0], res[1], next);
+        })();
+      }
+
+      function onLoaded() {
+        preconnectAssets();
+        prefetchAssets();
+      }
+
+      if (document.readyState === 'complete') {
+        onLoaded();
+      } else {
+        addEventListener('load', onLoaded);
+      }
+    })();
+  
